@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<h4>Creamos la vista views/menu/new.jade</h4>
+<pre>
+<code>
+
+	extends ../layout.jade
+	block contenido
+	  div(class="col-md-5 center-block no-float top-space text-left")
+	    h1 Agregar Producto
+	    form(method="post" action="/menu" style="margin-top:1.5em;")
+	      div(class="form-group")
+	        label Nombre
+	        input(type="text" name="title" placeholder="Nombre del producto" class="form-control")
+	      div(class="form-group")
+	        label Descripción
+	        textarea(name="description" placeholder="Descripción del producto" class="form-control")
+	      div(class="form-group")
+	        label Costo
+	        input(type="number" name="pricing" placeholder="Precio del producto" class="form-control")
+	      div(class="form-group")
+	        label Contraseña
+	        input(type="password" name="password" placeholder="Contraseña" class="form-control")
+	      div(class="form-group text-right")
+	        input(type="submit" class="btn btn-info" value="Guardar")
+	  script(src="https://code.jquery.com/jquery-2.2.4.min.js")
+	  script(src="js/main.js")
+
+</code>
+</pre>
+<p>instalamos body-parser a nuestro proyecto</p>
+<pre>
+	
+	> npm i -S body-parser
+
+</pre>
+<p>Modicamos app.js para requerir el body parser, codear la logica post y guardar en base de datos</p>
+<pre>
+	
+var express = require('express');
+var mongoose = require('mongoose');
+var bodyParser = require("body-parser")
+
+var app = express();
+
+mongoose.connect("mongodb://localhost/proyecto");
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
+
+//Definir el esquema
+
+var productSchema = {
+	title:String,
+	description:String,
+	imageUrl:String,
+	pricing:Number
+};
+
+var Product = mongoose.model("Product", productSchema);
+
+app.set("view engine", "jade");
+
+app.use(express.static("public"));
+
+app.get('/', function(req, res){
+  res.render("index");
+});
+
+app.post("/menu", function(req, res){
+	if(req.body.password == 12345678){
+		var data = {
+			title: req.body.title,
+			description: req.body.description,
+			imageUrl: "data.png",
+			pricing: req.body.pricing
+		}
+
+		var product = new Product(data);
+
+		product.save(function(err){
+			console.log(product);
+		});
+
+		res.render("index");
+
+	}
+	res.render("menu/new");
+
+});
+
+app.get("/menu/new", function(req, res){
+	res.render("menu/new");
+});
+
+app.listen(8080);
+
+</pre>
+</body>
+</html>

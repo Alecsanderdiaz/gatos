@@ -1,0 +1,26 @@
+admin.jade
+extends ../layout.jade
+block contenido
+	div(class="col-md-5 center-block no-float top-space text-left")
+		h1 Editar #{product.title}
+		form(method="POST" action="/menu/#{product.id}?_method=put" style="margin-top:1.5em;" enctype="multipart/form-data")
+			div(class="form-group")
+				label #
+				input(type="text" name="id" value="#{product.id}" class="form-control")
+			div(class="form-group")
+				label Nombre
+				input(type="text" name="title" value="#{product.title}" class="form-control")
+			div(class="form-group")
+				label Descripción
+				textarea(type="text" name="description" class="form-control") #{product.description}
+			div(class="form-group")
+				label Precio
+				input(type="text" name="pricing" value="#{product.pricing}" class="form-control")
+			div(class="form-group")
+				label Imagen del Producto
+				input(type="file" name="image_avatar")
+			div(class="form-group")
+				label Contraseña
+				input(type="password" name="password" placeholder="Contraseña" class="form-control")
+			div(class="form-group")
+				input(type="submit" class="btn btn-info" value="Guardar")
